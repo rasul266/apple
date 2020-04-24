@@ -25,7 +25,7 @@ class m200424_075739_create_table_apple extends Migration
             'created_at' => $this->integer(),
             'fall_date' => $this->integer(),
             'status' => $this->smallInteger()->defaultValue(Apple::STATUS_HANGING_ON_A_TREE),
-            'size' =>  $this->smallInteger()->defaultValue(100)
+            'size' =>  $this->smallInteger()->defaultValue(Apple::MAX_SIZE)
         ], $tableOptions);
 
     }

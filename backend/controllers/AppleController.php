@@ -35,6 +35,31 @@ class AppleController extends Controller
         ]);
     }
 
+    public function actionEat($id,$percent)
+    {
+        $id = Yii::$app->request->get('id');
+        $percent = Yii::$app->request->get('percent');
+
+        $apple = $this->findModel($id);
+
+        if($percent > Apple::MAX_SIZE or $percent < Apple::MIN_SIZE) {
+            throw new Exception('Процент должен быть больше или равно 100 и больше 0');
+        }
+
+        if($apple->isHaving() or $apple->isRotten()){
+            throw new Exception('Когда висит на дереве или испорчено, то съесть нельзя.');
+        }
+
+        if($apple->eat($percent))
+        {
+            $apple->save();
+        }
+
+        return $this->redirect(['index']);
+    }
+
+
+
 
     public function actionFall(int $id){
 
@@ -62,7 +87,6 @@ class AppleController extends Controller
 
         $applesCount = rand(7,25);
 
-
         for ($i=0; $i<$applesCount; $i++) {
 
             $colorForApple = $model->colorList[rand(0,count($model->colorList)-1)];
@@ -71,14 +95,15 @@ class AppleController extends Controller
             $apple->save();
         }
 
-
        return $this->redirect(['/apple/index']);
     }
+
 
 
     public function actionDelete($id)
     {
         $apple = $this->findModel($id);
+
         if($apple->isEaten())
         {
             $apple->delete();

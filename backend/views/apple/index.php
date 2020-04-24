@@ -9,6 +9,7 @@ use common\models\Apple;
 
 $this->title = 'Apples';
 $this->params['breadcrumbs'][] = $this->title;
+
 ?>
 <div class="apple-index">
 
@@ -24,8 +25,6 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-//            'id',
-
             [
 
                 'attribute' => 'color',
@@ -39,7 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 'attribute' => 'size',
                 'value' => function($model) {
-                    return $model->size/Apple::DEFAULT_SIZE;
+                    return $model->size/Apple::MAX_SIZE;
                     }
             ],
 
@@ -64,8 +63,16 @@ $this->params['breadcrumbs'][] = $this->title;
                                 ['title' => 'Упасть', 'class' => 'btn btn-default btn-sm']);
                     },
                     'eat' => function ($url, $model) {
-                      return Html::a('<span class="glyphicon glyphicon-apple"></span>', $url,
-                                ['title' => 'Съесть', 'class' => 'btn btn-default btn-sm']);
+
+                      if($model->isFell())
+                      {
+                          $textInput = Html::input('text','percent', '', $options = ['style'=>'width:50px']);
+                      }else {
+                          $textInput = '';
+                      }
+
+                      return $textInput.Html::a('<span class="glyphicon glyphicon-apple"></span>', $url,
+                                ['title' => 'Съесть', 'data-id'=>$model->id, 'style'=>"margin-left:4px", 'class' => 'apple btn btn-default btn-sm']);
                     },
 
                     'delete' => function ($url, $model) {
