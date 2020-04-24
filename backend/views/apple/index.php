@@ -41,20 +41,31 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => function($model) {
                     return $model->size/Apple::DEFAULT_SIZE;
                     }
-            ]
-            ,
+            ],
 
             'created_at:datetime',
             'fall_date:datetime',
-            'status',
+
+            [
+                'filter' => Apple::getStatusList(),
+                'attribute' => 'status',
+                'value' => function ($model, $key, $index, $column) {
+                    /** @var Apple $model */
+                    return $model->getStatusName();
+              }
+            ],
 
             ['class' => 'yii\grid\ActionColumn',
-                'template' => '{fall}  {delete}',
+                'template' => '{fall} {eat} {delete} ',
                 'buttons' => [
 
                     'fall' => function ($url, $model) {
                             return Html::a('<span class="glyphicon glyphicon-arrow-down"></span>', $url,
                                 ['title' => 'Упасть', 'class' => 'btn btn-default btn-sm']);
+                    },
+                    'eat' => function ($url, $model) {
+                      return Html::a('<span class="glyphicon glyphicon-apple"></span>', $url,
+                                ['title' => 'Съесть', 'class' => 'btn btn-default btn-sm']);
                     },
 
                     'delete' => function ($url, $model) {
