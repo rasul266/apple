@@ -8,6 +8,7 @@ use yii\data\ActiveDataProvider;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\base\Exception;
 
 /**
  * AppleController implements the CRUD actions for Apple model.
@@ -17,17 +18,7 @@ class AppleController extends Controller
     /**
      * {@inheritdoc}
      */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
+
 
     /**
      * Lists all Apple models.
@@ -50,11 +41,20 @@ class AppleController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+    public function actionFall(int $id){
+
+        $apple = $this->findModel($id);
+
+        if($apple->isHaving())
+        {
+            $apple->fallToGround();
+            $apple->save();
+
+        }else{
+            Throw new Exception('Яблоко уже лежит на земле!!');
+        }
+
+        return $this->redirect(['index']);
     }
 
     /**
@@ -72,7 +72,7 @@ class AppleController extends Controller
 
         for ($i=0; $i<$applesCount; $i++) {
 
-            $colorForApple = $model->colorList[rand(0,count($model->colorList))];
+            $colorForApple = $model->colorList[rand(0,count($model->colorList)-1)];
 
             $apple = new Apple($colorForApple);
             $apple->save();
@@ -111,7 +111,14 @@ class AppleController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $apple = $this->findModel($id);
+        if($apple->isEaten())
+        {
+            $apple->delete();
+
+        }else{
+            throw new Exception('Чтобы удалить, надо сначала съесть яблоко!!');
+        }
 
         return $this->redirect(['index']);
     }
