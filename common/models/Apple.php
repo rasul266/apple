@@ -192,5 +192,21 @@ class Apple extends \yii\db\ActiveRecord
     }
 
 
+    public static function getAllApples()
+    {
+        return self::find()->orderBy('id desc')->all();
+    }
+
+    public function getDate()
+    {
+        return $this->created_at = Yii::$app->formatter->asDatetime($this->created_at);
+    }
+
+    public function getFallDate()
+    {
+        return $this->created_at = Yii::$app->formatter->asDatetime($this->fall_date);
+    }
+
+
 
 }

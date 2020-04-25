@@ -26,23 +26,21 @@ class AppleController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Apple::find(),
-        ]);
+        $appleList = Apple::getAllApples();
 
         return $this->render('index', [
-            'dataProvider' => $dataProvider,
+            'appleList' => $appleList,
         ]);
     }
 
-    public function actionEat($id,$percent)
+    public function actionEat()
     {
-        $id = Yii::$app->request->get('id');
-        $percent = Yii::$app->request->get('percent');
+        $id = Yii::$app->request->post('id');
+        $percent = intval(Yii::$app->request->post('percent'));
 
         $apple = $this->findModel($id);
 
-        if($percent > Apple::MAX_SIZE or $percent < Apple::MIN_SIZE) {
+        if( !is_int($percent) or $percent > Apple::MAX_SIZE or $percent < Apple::MIN_SIZE) {
             throw new Exception('Процент должен быть больше или равно 100 и больше 0');
         }
 

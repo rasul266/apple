@@ -19,71 +19,51 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a('Generate Apple', ['generate'], ['class' => 'btn btn-success']) ?>
     </p>
 
+<?php if($appleList):?>
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Цвет</th>
+            <th scope="col">Сколько съели (%)</th>
+            <th scope="col">Дата появления</th>
+            <th scope="col">Дата падения</th>
+            <th scope="col">Состояние</th>
+            <th scope="col">Действия</th>
+        </tr>
+        </thead>
+        <tbody>
 
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+        <?php foreach ($appleList as $apple):?>
+        <tr>
+            <td style="color:<?=$apple->color?>"><?=$apple->color?></td>
+            <td><?=$apple->size/Apple::MAX_SIZE?></td>
+            <td><?=$apple->date?></td>
+            <td><?=$apple->fallDate?></td>
+            <td><?=$apple->statusName?></td>
+            <td>
 
-            [
+                <a class='btn btn-default btn-sm' title="Упасть" href="<?=\yii\helpers\Url::to(['/apple/fall','id'=>$apple->id])?>">
+                    <span class="glyphicon glyphicon-arrow-down"></span>
+                </a>
 
-                'attribute' => 'color',
-                'contentOptions' => function($model) {
-                    return [
-                        'style' =>'color:'.$model->color ];
-                    }
-            ],
+                <?= Html::beginForm('eat','pos')?>
+                <?=Html::input('number','percent','',['style'=>'width:50px','placeholder'=>'%'])?>
+                <?=Html::hiddenInput('id',"$apple->id")?>
+                <?=Html::submitInput('Съесть')?>
+               <?=Html::endForm()?>
 
-                [
+                <a class='btn btn-default btn-sm' title="Удалить" href="<?=\yii\helpers\Url::to(['/apple/delete','id'=>$apple->id])?>">
+                    <span class="glyphicon glyphicon-trash"></span>
+                </a>
 
-                'attribute' => 'size',
-                'value' => function($model) {
-                    return $model->size/Apple::MAX_SIZE;
-                    }
-            ],
+            </td>
+        </tr>
 
-            'created_at:datetime',
-            'fall_date:datetime',
+        <?php endforeach;?>
 
-            [
-                'filter' => Apple::getStatusList(),
-                'attribute' => 'status',
-                'value' => function ($model, $key, $index, $column) {
-                    /** @var Apple $model */
-                    return $model->getStatusName();
-              }
-            ],
-
-            ['class' => 'yii\grid\ActionColumn',
-                'template' => '{fall} {eat} {delete} ',
-                'buttons' => [
-
-                    'fall' => function ($url, $model) {
-                            return Html::a('<span class="glyphicon glyphicon-arrow-down"></span>', $url,
-                                ['title' => 'Упасть', 'class' => 'btn btn-default btn-sm']);
-                    },
-                    'eat' => function ($url, $model) {
-
-                      if($model->isFell())
-                      {
-                          $textInput = Html::input('text','percent', '', $options = ['style'=>'width:50px']);
-                      }else {
-                          $textInput = '';
-                      }
-
-                      return $textInput.Html::a('<span class="glyphicon glyphicon-apple"></span>', $url,
-                                ['title' => 'Съесть', 'data-id'=>$model->id, 'style'=>"margin-left:4px", 'class' => 'apple btn btn-default btn-sm']);
-                    },
-
-                    'delete' => function ($url, $model) {
-                      return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url,
-                                ['title' => 'Удалить', 'class' => 'btn btn-default btn-sm']);
-                    }
-                ],
-            ],
-        ],
-    ]);
-  ?>
-
-
+        </tbody>
+    </table>
+<?php else:?>
+      <h4 class="text-center">Яблок пока нет</h4>
+    <?php endif;?>
 </div>
