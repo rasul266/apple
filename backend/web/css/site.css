@@ -3,6 +3,19 @@ body {
     height: 100%;
 }
 
+.fall{
+float: left;
+    position: relative;
+    right:15px;
+}
+
+.delete-apple {
+    float: right;
+    margin-top: -25px;
+    position: relative;
+    left:15px;
+}
+
 .wrap {
     min-height: 100%;
     height: auto;

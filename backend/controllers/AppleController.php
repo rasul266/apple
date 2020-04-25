@@ -40,16 +40,15 @@ class AppleController extends Controller
 
         $apple = $this->findModel($id);
 
-        if( !is_int($percent) or $percent > Apple::MAX_SIZE or $percent < Apple::MIN_SIZE) {
+        if (!is_int($percent) or $percent > Apple::MAX_SIZE or $percent < Apple::MIN_SIZE) {
             throw new Exception('Процент должен быть больше или равно 100 и больше 0');
         }
 
-        if($apple->isHaving() or $apple->isRotten()){
+        if ($apple->isHaving() or $apple->isRotten()) {
             throw new Exception('Когда висит на дереве или испорчено, то съесть нельзя.');
         }
 
-        if($apple->eat($percent))
-        {
+        if ($apple->eat($percent)) {
             $apple->save();
         }
 
@@ -57,18 +56,16 @@ class AppleController extends Controller
     }
 
 
-
-
-    public function actionFall(int $id){
+    public function actionFall(int $id)
+    {
 
         $apple = $this->findModel($id);
 
-        if($apple->isHaving())
-        {
+        if ($apple->isHaving()) {
             $apple->fallToGround();
             $apple->save();
 
-        }else{
+        } else {
 
             Throw new Exception('Яблоко уже лежит на земле !!!');
 
@@ -78,41 +75,37 @@ class AppleController extends Controller
     }
 
 
-
     public function actionGenerate()
     {
         $model = new Apple();
 
-        $applesCount = rand(7,25);
+        $applesCount = rand(3, 9);
 
-        for ($i=0; $i<$applesCount; $i++) {
+        for ($i = 0; $i < $applesCount; $i++) {
 
-            $colorForApple = $model->colorList[rand(0,count($model->colorList)-1)];
+            $colorForApple = $model->colorList[rand(0, count($model->colorList) - 1)];
 
             $apple = new Apple($colorForApple);
             $apple->save();
         }
 
-       return $this->redirect(['/apple/index']);
+        return $this->redirect(['/apple/index']);
     }
-
 
 
     public function actionDelete($id)
     {
         $apple = $this->findModel($id);
 
-        if($apple->isEaten())
-        {
+        if ($apple->isEaten()) {
             $apple->delete();
 
-        }else{
-            throw new Exception('Чтобы удалить, надо сначала съесть яблоко!!');
+        } else {
+            throw new Exception('Чтобы удалить, надо сначала съесть яблоко !!');
         }
 
         return $this->redirect(['index']);
     }
-
 
 
     protected function findModel($id)
@@ -121,6 +114,6 @@ class AppleController extends Controller
             return $model;
         }
 
-        throw new NotFoundHttpException('The requested page does not exist.');
+        throw new NotFoundHttpException('Яблоко не найдено !!!');
     }
 }

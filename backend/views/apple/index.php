@@ -42,17 +42,18 @@ $this->params['breadcrumbs'][] = $this->title;
             <td><?=$apple->statusName?></td>
             <td>
 
-                <a class='btn btn-default btn-sm' title="Упасть" href="<?=\yii\helpers\Url::to(['/apple/fall','id'=>$apple->id])?>">
+                <a class='btn btn-default btn-sm fall' title="Упасть" href="<?=\yii\helpers\Url::to(['/apple/fall','id'=>$apple->id])?>">
                     <span class="glyphicon glyphicon-arrow-down"></span>
                 </a>
+                <div class="clear"></div>
 
-                <?= Html::beginForm('eat','pos')?>
-                <?=Html::input('number','percent','',['style'=>'width:50px','placeholder'=>'%'])?>
+                <?= Html::beginForm('eat','post')?>
+                <?=Html::input('number','percent','',['style'=>'width:50px','required ','placeholder'=>'%'])?>
                 <?=Html::hiddenInput('id',"$apple->id")?>
                 <?=Html::submitInput('Съесть')?>
                <?=Html::endForm()?>
 
-                <a class='btn btn-default btn-sm' title="Удалить" href="<?=\yii\helpers\Url::to(['/apple/delete','id'=>$apple->id])?>">
+                <a  class='btn btn-default btn-sm delete-apple' title="Удалить" href="<?=\yii\helpers\Url::to(['/apple/delete','id'=>$apple->id])?>">
                     <span class="glyphicon glyphicon-trash"></span>
                 </a>
 
