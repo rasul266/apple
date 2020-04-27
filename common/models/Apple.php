@@ -39,7 +39,7 @@ class Apple extends \yii\db\ActiveRecord
         return 'apple';
     }
 
-    public function __construct($color = null, $config = [])
+    public function __construct($color = null, $config = []) //При создании яблока, сразу устанавливаем цвет
     {
         if (!is_null($color)) {
             $this->color = $color;
@@ -81,7 +81,7 @@ class Apple extends \yii\db\ActiveRecord
 
     public function afterFind()
     {
-        if ($this->hasExpired()) {
+        if ($this->hasExpired()) { //Если срок яблоки прошел то ставим знаяение для статуса "Испорчено"
             $this->rotten();
         }
 
@@ -89,7 +89,7 @@ class Apple extends \yii\db\ActiveRecord
     }
 
 
-    public function hasExpired()
+    public function hasExpired() //Проверяем прошло ли 5 дней после лежания яблоки на земле
     {
         if ($this->isFell() and $this->fall_date + (5 * 3600) <= time()) {
 
@@ -102,7 +102,7 @@ class Apple extends \yii\db\ActiveRecord
 
     public function beforeSave($insert)
     {
-        if ($this->isNewRecord) {
+        if ($this->isNewRecord) { //Если создается новое яблоко то сразу добавляем время создания и ставим значение для статус "Висит"
             $this->created_at = time();
             $this->having();
         }
@@ -126,19 +126,19 @@ class Apple extends \yii\db\ActiveRecord
     }
 
 
-    public function rotten()
+    public function rotten() // Устаналиваем значение для статус "Испортилось"
     {
         $this->status = self::STATUS_ROTTEN;
         return $this->save(false, ['status']);
     }
 
-    public function having()
+    public function having()// Устаналиваем значение для статус "Висит"
     {
         $this->status = self::STATUS_HANGING_ON_A_TREE;
     }
 
 
-    public function isHaving()
+    public function isHaving() //Поверяем висит ли яблоко на дереве
     {
         if ($this->status == self::STATUS_HANGING_ON_A_TREE) {
             return true;
@@ -147,7 +147,7 @@ class Apple extends \yii\db\ActiveRecord
         return false;
     }
 
-    public function isRotten()
+    public function isRotten() //Поверяем испорчено ли яблоко или нет
     {
         if ($this->status == self::STATUS_ROTTEN) {
             return true;
@@ -156,7 +156,7 @@ class Apple extends \yii\db\ActiveRecord
         return false;
     }
 
-    public function isFell()
+    public function isFell() //Поверяем лежит ли яблоко на земле
     {
         if ($this->status == self::STATUS_FELL_TO_THE_GROUND) {
             return true;
@@ -165,7 +165,7 @@ class Apple extends \yii\db\ActiveRecord
         return false;
     }
 
-    public function fallToGround()
+    public function fallToGround() // Устанавливаем значение для статус "Лежит на земле"
     {
         $this->status = self::STATUS_FELL_TO_THE_GROUND;
         $this->fall_date = time();
@@ -184,7 +184,7 @@ class Apple extends \yii\db\ActiveRecord
         return true;
     }
 
-    public function isEaten()
+    public function isEaten() //Проверяем съедено ли яблоко или нет
     {
         if ($this->size == self::MIN_SIZE) {
             return true;
